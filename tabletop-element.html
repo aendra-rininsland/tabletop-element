@@ -23,10 +23,6 @@ Example:
 -->
 
 <dom-module id="tabletop-element">
-  <template>
-
-  </template>
-
   <script>
     Polymer({
       is: 'tabletop-element',
@@ -208,14 +204,14 @@ Example:
         // This is the point where you should make modifications to the DOM (when
         // necessary), or kick off any processes the element wants to perform.
 
-        Tabletop.init({
+        this.options = {
           key: this.key,
           simpleSheet: this.simpleSheet,
           parseNumbers: this.parseNumbers,
           orderby: this.orderBy,
           reverse: this.reverse,
           postProcess: this.postProcess,
-          wanted: this.wanted,
+          wanted: this.wanted ? this.wanted.split(/,\s?/) : [],
           endpoint: this.endpoint,
           singleton: this.singleton,
           simple_url: this.simple_url,
@@ -225,8 +221,10 @@ Example:
           debug: this.debug,
           parameterize: this.parameterize,
           prettyColumnNames: this.prettyColumnNames,
-          callback: this._handleResponse
-        });
+          callback: this._handleResponse.bind(this)
+        };
+
+        Tabletop.init(this.options);
       },
 
       attached: function() {
