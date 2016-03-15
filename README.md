@@ -19,7 +19,7 @@ Example:
   </template>
 ```
 
-For full API details, please see [full online documentation](http://www.aendrew.com/tabletop-element/tabletop-element/).
+For full API details, please see [full online documentation](http://aendrew.com/tabletop-element/).
 
 ## Dependencies
 
