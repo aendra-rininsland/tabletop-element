@@ -244,9 +244,17 @@ Example:
       },
 
       _handleResponse: function(data, tabletop) {
-        this.response = data;
-        this.tabletop = tabletop;
+        this._setResponse(data);
+        this._setTabletop(tabletop);
         this.fire('response', {data: data, tabletop: tabletop});
+      },
+
+      _setResponse: function(data) {
+        this.response = data;
+      },
+
+      _setTabletop: function(data) {
+        this.tabletop = data;
       }
     });
   </script>
