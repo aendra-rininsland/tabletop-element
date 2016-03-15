@@ -197,13 +197,6 @@ Example:
       // Element Lifecycle
 
       ready: function() {
-        // `ready` is called after all elements have been configured, but
-        // propagates bottom-up. This element's children are ready, but parents
-        // are not.
-        //
-        // This is the point where you should make modifications to the DOM (when
-        // necessary), or kick off any processes the element wants to perform.
-
         this.options = {
           key: this.key,
           simpleSheet: this.simpleSheet,
@@ -224,37 +217,47 @@ Example:
           callback: this._handleResponse.bind(this)
         };
 
-        Tabletop.init(this.options);
+        // Run Tabletop!
+        try {
+          this.fire('request', this.options);
+          window.Tabletop.init(this.options);
+        } catch(e) {
+          this.fire('error', e);
+        }
+
       },
 
-      attached: function() {
-        // `attached` fires once the element and its parents have been inserted
-        // into a document.
-        //
-        // This is a good place to perform any work related to your element's
-        // visual state or active behavior (measuring sizes, beginning animations,
-        // loading resources, etc).
-      },
+      attached: function() {},
+      detached: function() {},
 
-      detached: function() {
-        // The analog to `attached`, `detached` fires when the element has been
-        // removed from a document.
-        //
-        // Use this to clean up anything you did in `attached`.
-      },
-
+      /**
+       * Sets the bound properties, fires the `response` event.
+       * @param  {Array|Object} data     Spreadsheet data
+       * @param  {Object}       tabletop Tabletop object
+       * @return {void}
+       */
       _handleResponse: function(data, tabletop) {
         this._setResponse(data);
         this._setTabletop(tabletop);
         this.fire('response', {data: data, tabletop: tabletop});
       },
 
+      /**
+       * Setter for the read-only `response` property.
+       * @param  {Array|Object} data Spreadsheet data
+       * @return {void}
+       */
       _setResponse: function(data) {
         this.response = data;
       },
 
-      _setTabletop: function(data) {
-        this.tabletop = data;
+      /**
+       * Setter for the read-only `tabletop` property.
+       * @param  {Object} data Tabletop object
+       * @return {void}
+       */
+      _setTabletop: function(tabletop) {
+        this.tabletop = tabletop;
       }
     });
   </script>
