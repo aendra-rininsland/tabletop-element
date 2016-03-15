@@ -1,7 +1,25 @@
 # tabletop-element
 
-An element providing a starting point for your own reusable Polymer elements.
+An element allowing the easy use of Google Sheets in your projects.
 
+## API
+
+Example:
+```
+  <tabletop-element
+    key="1dJbeUUovS3s2tNoJnS7BDoMRBIzfnHPJc3_NZoNJObA" <!-- key of the sheet -->
+    simple-sheet="true" <!-- Whether to use "simpleSheet" mode -->
+    wanted="latest" <!-- Which sheet to grab -->
+    response="{{dataBoundVariable}}" <!-- Bind to a variable! -->
+    on-response="_privateResponseHandler" <!-- Or handle response via event -->
+  ></tabletop-element>
+
+  <template is="dom-if" items="[[dataBoundVariable]]">
+    <h1>[[item.label]]</h1>
+  </template>
+```
+
+For full API details, please see [full online documentation](http://www.aendrew.com/tabletop-element/tabletop-element/).
 
 ## Dependencies
 
