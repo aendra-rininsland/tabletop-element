@@ -1,0 +1,264 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<script src="../tabletop/src/tabletop.js"></script>
+
+<!--
+Element wrapper for the Tabletop library.
+
+Example:
+
+    <tabletop-element></tabletop-element>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="tabletop-element">
+  <script>
+    Polymer({
+      is: 'tabletop-element',
+
+      /**
+       * Fired when a request is sent.
+       *
+       * @event request
+       */
+
+      /**
+       * Fired when a response is received.
+       *
+       * @event response
+       */
+
+      /**
+       * Fired when an error is received.
+       *
+       * @event error
+       */
+
+      properties: {
+        /**
+         * `key` is the key of the published spreadsheet or the URL of the published spreadsheet.
+         * @type {String}
+         */
+        key: String,
+
+        /**
+         * `simpleSheet` can be true or false (default false).
+         * It assumes you have one table and you don't care what it's called,
+         * so it sends the callback an array of rows instead of a list of models.
+         * @type {Boolean}
+         */
+        simpleSheet: Boolean,
+
+        /**
+         * `parseNumbers` can be true or false (default false).
+         * If true, Tabletop will automatically parse any numbers for you so
+         * they don't run around as strings.
+         * @type {Boolean}
+         */
+        parseNumbers: Boolean,
+
+        /**
+         * `orderBy` asks Google to sort the results by a column.
+         * You'll need to strip spaces and lowercase your column names,
+         * i.e. `{order: 'firstname'}` for a column called *First Name*. You'll want
+         * to use this when you only have a single sheet, though, otherwise it
+         * will try to sort by the same column on every single sheet.
+         * @type {String}
+         */
+        orderBy: String,
+
+        /**
+         * `reverse` reverses the order if set to true.
+         * @type {Boolean}
+         */
+        reverse: Boolean,
+
+        /**
+         * `postProcess` is a function that processes each row after it has been
+         * created. Use this to rename columns, compute attributes, etc.
+         * @type {String}
+         */
+        postProcess: String,
+
+        /**
+         * `wanted` is an array of sheets you'd like to pull. If you have 20
+         * sheets in a public spreadsheet you might as well only pull what you
+         * need to access. Defaults to all.
+         * @type {String}
+         */
+        wanted: String,
+
+        /**
+         * `endpoint` is the protocol and domain you'd like to query for your spreadsheet.
+         * Defaults to `https://spreadsheets.google.com`.
+         * @type {Object}
+         */
+        endpoint: {
+          type: String,
+          value: 'https://spreadsheets.google.com'
+        },
+
+        /**
+         * `singleton` assigned the instantiated Tabletop object to `Tabletop.singleton`,
+         * implemented to simplify caching and proxying of requests. Defaults to `false`.
+         * @type {Boolean}
+         */
+        singleton: Boolean,
+
+        /**
+         * `simple_url`, if `true`, changes all requests to `KEY` and `KEY-SHEET_ID`.
+         * Defaults to `false`.
+         * @type {Boolean}
+         */
+        simple_url: Boolean,
+
+        /**
+         * `proxy` allows you to easily use spreadsheets not located on Google Spreadsheet servers.
+         * Setting proxy: "http://www.proxy.com" is equivalent to setting
+         * `{ simple_url: true, singleton: true, endpoint: "http://www.proxy.com" }`.
+         * [Flatware](https://github.com/jsoma/flatware) might provide better documentation.
+         * @type {String}
+         */
+        proxy: String,
+
+        /**
+         * `wait` prevents tabletop from pulling the Google spreadsheet until you're ready.
+         * Used in the backbone.js example.
+         * @type {Boolean}
+         */
+        wait: Boolean,
+
+        /**
+         * `query` sends a [structured query](https://developers.google.com/google-apps/spreadsheets/#sending_a_structured_query_for_rows)
+         * along with the spreadsheet request, so you can ask for rows with `age > 55` and the like.
+         * Right now it's passed with every request, though, so if you're using
+         * multiple tables you'll end up in Problem City. It should work great
+         * with `simpleSheet` situations, though.
+         * @type {String}
+         */
+        query: String,
+
+        /**
+         * `debug` returns on debug mode, which gives you plenty of messaging about what's going on under the hood.
+         * @type {Boolean}
+         */
+        debug: Boolean,
+
+        /**
+         * parameterize changes the src of all injected scripts. Instead of src,
+         * src is URI encoded and appended to parameterize, e.g. set it to
+         * http://example.herokuapp.com/?url=. Mostly for [gs-proxy](https://github.com/MinnPost/gs-proxy).
+         * @type {Boolean}
+         */
+        parameterize: Boolean,
+
+        /**
+         * `prettyColumnNames` can be true or false (default to `true`, unless `proxy` is enabled**).
+         * Since Google doesn't pass us exactly the same column names as in the header
+         * ('$ Processed' becomes 'processed'), it takes an extra request to correct them.
+         * If you don't want the extra request, you'll want to set it to `false`.
+         * N.b., `prettyColumnNames` doesn't work with Flatware, is why we disable it with a proxy by default
+         * @type {Boolean}
+         */
+        prettyColumnNames: Boolean,
+
+        /**
+         * The Tabletop response.
+         * @type {Object}
+         */
+        response: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
+
+        /**
+         * The full Tabletop object.
+         * @type {Object}
+         */
+        tabletop: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        }
+      },
+
+      // Element Lifecycle
+
+      ready: function() {
+        this.options = {
+          key: this.key,
+          simpleSheet: this.simpleSheet,
+          parseNumbers: this.parseNumbers,
+          orderby: this.orderBy,
+          reverse: this.reverse,
+          postProcess: this.postProcess,
+          wanted: this.wanted ? this.wanted.split(/,\s?/) : [],
+          endpoint: this.endpoint,
+          singleton: this.singleton,
+          simple_url: this.simple_url,
+          proxy: this.proxy,
+          wait: this.wait,
+          query: this.query,
+          debug: this.debug,
+          parameterize: this.parameterize,
+          prettyColumnNames: this.prettyColumnNames,
+          callback: this._handleResponse.bind(this)
+        };
+
+        // Run Tabletop!
+        try {
+          this.fire('request', this.options);
+          window.Tabletop.init(this.options);
+        } catch(e) {
+          this.fire('error', e);
+        }
+
+      },
+
+      attached: function() {},
+      detached: function() {},
+
+      /**
+       * Sets the bound properties, fires the `response` event.
+       * @param  {Array|Object} data     Spreadsheet data
+       * @param  {Object}       tabletop Tabletop object
+       * @return {void}
+       */
+      _handleResponse: function(data, tabletop) {
+        this._setResponse(data);
+        this._setTabletop(tabletop);
+        this.fire('response', {data: data, tabletop: tabletop});
+      },
+
+      /**
+       * Setter for the read-only `response` property.
+       * @param  {Array|Object} data Spreadsheet data
+       * @return {void}
+       */
+      _setResponse: function(data) {
+        this.response = data;
+      },
+
+      /**
+       * Setter for the read-only `tabletop` property.
+       * @param  {Object} data Tabletop object
+       * @return {void}
+       */
+      _setTabletop: function(tabletop) {
+        this.tabletop = tabletop;
+      }
+    });
+  </script>
+</dom-module>
