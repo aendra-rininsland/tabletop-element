@@ -24,47 +24,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- You can use the document as a place to set up your fixtures. -->
     <test-fixture id="tabletop-element-fixture">
       <template>
-        <tabletop-element>
-          <h2>tabletop-element</h2>
-        </tabletop-element>
+        <tabletop-element
+          key="1TJKBqwQYREmKjVMsxaugDgD6ESpiynNBZhxI1vHqgK8"
+          simple-sheet="true"
+          response="{{items}}"
+          ></tabletop-element>
       </template>
     </test-fixture>
 
     <script>
+      // These are pretty rudimentary. If you like this element and want to
+      // improve it, please add more tests! -Æ.
+      
       suite('<tabletop-element>', function() {
-
-        var myEl;
+        var ttEl;
 
         setup(function() {
-          myEl = fixture('tabletop-element-fixture');
+          ttEl = fixture('tabletop-element-fixture');
         });
 
-        test('defines the "author" property', function() {
-          assert.equal(myEl.author.name, 'Dimitri Glazkov');
-          assert.equal(myEl.author.image, 'http://addyosmani.com/blog/wp-content/uploads/2013/04/unicorn.jpg');
-        });
-
-        test('says hello', function() {
-          assert.equal(myEl.sayHello(), 'tabletop-element says, Hello World!');
-
-          var greetings = myEl.sayHello('greetings Earthlings');
-          assert.equal(greetings, 'tabletop-element says, greetings Earthlings');
-        });
-
-        test('fires lasers', function(done) {
-          myEl.addEventListener('tabletop-element-lasers', function(event) {
-            assert.equal(event.detail.sound, 'Pew pew!');
+        test('response event', function(done) {
+          ttEl.addEventListener('response', function(event) {
+            assert.equal(event.detail.data.length, 200);
             done();
           });
-          myEl.fireLasers();
         });
 
-        test('distributed children', function() {
-          var els = myEl.getContentChildren();
-          assert.equal(els.length, 1, 'one distributed node');
-          assert.equal(els[0], myEl.querySelector('h2'), 'content distributed correctly');
+        test('response value', function(done) {
+          ttEl.addEventListener('response', function(event) {
+            assert.equal(ttEl.response.length, 200);
+            done();
+          });
         });
-
       });
     </script>
 

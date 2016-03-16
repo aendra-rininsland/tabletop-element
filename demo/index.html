@@ -18,31 +18,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body unresolved>
 
-    <p>An example of <code>&lt;tabletop-element&gt;</code>:</p>
+    <h1>&lt;tabletop-element&gt;</h1>
+    <pre><code>
+      <!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #007700">&lt;template</span> <span style="color: #000077">is=</span><span style="background-color: #e0e0ff">&quot;dom-bind&quot;</span><span style="color: #007700">&gt;</span>
+      <span style="color: #007700">&lt;tabletop</span><span style="color: #000077">-element</span>
+        <span style="color: #000077">key=</span><span style="background-color: #e0e0ff">&quot;1TJKBqwQYREmKjVMsxaugDgD6ESpiynNBZhxI1vHqgK8&quot;</span>
+        <span style="color: #000077">simple-sheet=</span><span style="background-color: #e0e0ff">&quot;true&quot;</span>
+        <span style="color: #000077">response=</span><span style="background-color: #e0e0ff">&quot;{{items}}&quot;</span>
+        <span style="color: #007700">&gt;</span><span style="color: #FF0000; background-color: #FFAAAA">&lt;</span>/tabletop-element&gt;
+      <span style="color: #007700">&lt;table&gt;</span>
+        <span style="color: #007700">&lt;template</span> <span style="color: #000077">is=</span><span style="background-color: #e0e0ff">&quot;dom-repeat&quot;</span> <span style="color: #000077">items=</span><span style="background-color: #e0e0ff">&quot;[[items]]&quot;</span><span style="color: #007700">&gt;</span>
+        <span style="color: #007700">&lt;tr&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.first]]<span style="color: #007700">&lt;/td&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.second]]<span style="color: #007700">&lt;/td&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.third]]<span style="color: #007700">&lt;/td&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.fourth]]<span style="color: #007700">&lt;/td&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.fifth]]<span style="color: #007700">&lt;/td&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.sixth]]<span style="color: #007700">&lt;/td&gt;</span>
+          <span style="color: #007700">&lt;td&gt;</span>[[item.seventh]]<span style="color: #007700">&lt;/td&gt;</span>
+        <span style="color: #007700">&lt;/tr&gt;</span>
+        <span style="color: #007700">&lt;/template&gt;</span>
+      <span style="color: #007700">&lt;/table&gt;</span>
+<span style="color: #007700">&lt;/template&gt;</span>
+</pre></div>
 
-    <p>Make words! <button id="saybtn">Say Something</button></p>
-    <p>Make lasers! <button id="laserbtn">Fire lasers</button></p>
+    </code></pre>
 
-    <tabletop-element author='{"name": "Lord Meowser", "image": "http://lorempixel.com/g/300/200/cats/"}' fancy>
-      <h2>Hello tabletop-element</h2>
-    </tabletop-element>
-
-    <script>
-      var seedElement = document.querySelector('tabletop-element');
-
-      document.querySelector('#saybtn').addEventListener('click', function() {
-        alert(seedElement.sayHello('Hallo!'));
-      });
-
-      document.querySelector('#laserbtn').addEventListener('click', function() {
-        seedElement.fireLasers();
-      });
-
-      document.addEventListener("tabletop-element-lasers", function(e) {
-        console.log(e.detail.sound);
-      });
-
-    </script>
+    <template is="dom-bind">
+      <tabletop-element
+        key="1TJKBqwQYREmKjVMsxaugDgD6ESpiynNBZhxI1vHqgK8"
+        simple-sheet="true"
+        response="{{items}}"
+        ></tabletop-element>
+      <table>
+        <template is="dom-repeat" items="[[items]]">
+        <tr>
+          <td>[[item.first]]</td>
+          <td>[[item.second]]</td>
+          <td>[[item.third]]</td>
+          <td>[[item.fourth]]</td>
+          <td>[[item.fifth]]</td>
+          <td>[[item.sixth]]</td>
+          <td>[[item.seventh]]</td>
+        </tr>
+        </template>
+      </table>
+    </template>
 
   </body>
 </html>
