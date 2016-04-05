@@ -76,8 +76,11 @@ Then, you can run your tests on _all_ of your local browsers via:
 
 ## Changelog
 
-- 0.0.1
-  Initial release
+- 0.2.0
+  Removes service worker support; this should be handled on the app-level.
 
 - 0.1.0
   Adds service worker support
+
+- 0.0.1
+  Initial release
